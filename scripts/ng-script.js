@@ -53,5 +53,10 @@ weather.controller("forecastController", ["$scope", "$resource", "dataShare", fu
         appid: '7661df8e5737e8855c66e396f40b3318'
     });
 
-    console.log($scope.weatherData);
+    $scope.convertToCelcius = function(degK){
+        return Math.round(degK - 273.15);
+    };
+    
+    $scope.convertToDate = function(dt){
+    };
 }]);
