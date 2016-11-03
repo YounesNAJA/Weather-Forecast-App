@@ -1,0 +1,8 @@
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ convertToDate({date: weatherObject.dt}) | date: dateFormat }}</h3>
+    </div>
+    <div class="panel-body">
+        <p>Temperature : {{ convertToC({deg: weatherObject.temp.day}) }} °C</p>
+    </div>
+</div>

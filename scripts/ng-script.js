@@ -15,6 +15,10 @@ weather.config(function ($routeProvider) {
         .when("/forecast", {
             templateUrl: 'pages/forecast.html',
             controller: 'forecastController'
+        })
+        .when("/forecast/:days", {
+            templateUrl: 'pages/forecast.html',
+            controller: 'forecastController'
         });
 });
 
@@ -36,10 +40,27 @@ weather.controller("homeController", ['$scope', 'dataShare', function ($scope, d
     });
 }]);
 
+/*
+ * CUSTOM DIRECTIVE
+ */
+weather.directive("weatherData", function () {
+    return {
+        templateUrl: 'directives/weatherData.html',
+        replace: true,
+        scope: {
+            weatherObject: '=',
+            convertToDate: '&',
+            convertToC: '&',
+            dateFormat: '@'
+        }
+    };
+});
 
-weather.controller("forecastController", ["$scope", "$resource", "dataShare", function ($scope, $resource, dataShare) {
+weather.controller("forecastController", ["$scope", "$resource", "$routeParams", "dataShare", function ($scope, $resource, $routeParams, dataShare) {
     $scope.city = dataShare.city;
-    $scope.weatherAPI = $resource("http://api.openweathermap.org/data/2.5/forecast", {
+    $scope.days = $routeParams.days;
+
+    $scope.weatherAPI = $resource("http://api.openweathermap.org/data/2.5/forecast/daily", {
         callback: "JSON_CALLBACK"
     }, {
         get: {
@@ -49,14 +70,15 @@ weather.controller("forecastController", ["$scope", "$resource", "dataShare", fu
 
     $scope.weatherData = $scope.weatherAPI.get({
         q: $scope.city,
-        cnt: 2,
+        cnt: $scope.days || 2,
         appid: '7661df8e5737e8855c66e396f40b3318'
     });
 
-    $scope.convertToCelcius = function(degK){
+    $scope.convertToCelcius = function (degK) {
         return Math.round(degK - 273.15);
     };
-    
-    $scope.convertToDate = function(dt){
+
+    $scope.convertToDate = function (dt) {
+        return dt * 1000;
     };
 }]);
