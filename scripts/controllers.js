@@ -1,14 +1,23 @@
 /* 
  * CONTROLLERS
  */
-weather.controller("homeController", ['$scope', 'dataShare', function ($scope, dataShare) {
+
+// HOME Controller
+weather.controller("homeController", ['$scope', "$location", 'dataShare', function ($scope, $location, dataShare) {
     $scope.city = dataShare.city;
 
     $scope.$watch('city', function () {
         dataShare.city = $scope.city;
     });
+    
+        
+    $scope.submit = function(){
+        $location.path("/forecast");
+    };
 }]);
 
+
+// FORECAST Controller
 weather.controller("forecastController", ["$scope", "$resource", "$routeParams", "dataShare", function ($scope, $resource, $routeParams, dataShare) {
     $scope.city = dataShare.city;
     $scope.days = $routeParams.days;
